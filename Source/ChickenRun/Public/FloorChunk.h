@@ -6,7 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "FloorChunk.generated.h"
 
+class ALandingNode;
 class AFloor;
+class AChicken;
 
 UCLASS()
 class CHICKENRUN_API AFloorChunk : public AActor
@@ -36,4 +38,30 @@ protected:
 
     UPROPERTY(EditAnywhere)
     TSubclassOf<AFloor> CenterFloor;
+
+    UPROPERTY(VisibleAnywhere)
+    TArray<AActor*> LandingNodes;
+
+    UPROPERTY(VisibleAnywhere)
+    TArray<AActor*> Props;
+
+    UPROPERTY(EditDefaultsOnly)
+    TSubclassOf<AChicken> ChickenRef;
+
+    UPROPERTY(EditDefaultsOnly)
+    TSubclassOf<ALandingNode> LandingNodeRef;
+
+    float Position_Y;
+    float MaxDistanceBackwardToChicken = 2000;
+    float CurrentLandingNode_X = -800;
+    float CurrentLandingNode_Z;
+
+protected:
+    void CalculateFloorTransform(FTransform &TransformLeft, FTransform &TransformMid,
+        FTransform &TransformRight, float Pos_Y);
+
+    void DestroyMeshes();
+    void CheckDistanceToDestroy();
+
+    void GenerateLandingNode(bool IsWater);
 };
